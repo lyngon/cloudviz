@@ -82,10 +82,7 @@ resource "aws_iam_role" "cloudviz" {
 }
 
 resource "aws_s3_bucket" "output" {
-    bucket      = "${local.prefix}-s3-bucket"
-    tags        = {
-        Name    = "CloudViz"
-    }
+    bucket      = "${local.prefix}-s3-output"
 }
 
 resource "aws_sns_topic" "new_output" {
