@@ -75,7 +75,7 @@ data "aws_iam_policy_document" "publish_to_topic" {
 }
 
 resource "aws_iam_role" "cloudviz" {
-    name                = "${prefix}role-cloudviz"
+    name                = "${local.prefix}-role-cloudviz"
     assume_role_policy  = data.aws_iam_policy_document.assume_role.json
     managed_policy_arns = [ data.aws_iam_policy.read_only ]
     inline_policy {
