@@ -11,7 +11,7 @@ variable "org" {
 }
 
 variable "env" {
-    description = "Envirionment. E.g. 'dev', 'stg', 'prd'"
+    description = "Environment. E.g. 'dev', 'stg', 'prd'"
     type        = string
 }
 
