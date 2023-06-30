@@ -19,6 +19,10 @@ locals {
 
 data "aws_caller_identity" "current" {}
 
+data "aws_iam_policy" "read_only" {
+    name    = "ReadOnlyAccess"
+}
+
 data "aws_iam_policy_document" "assume_role" {
     statement {
         effect          = "Allow"
@@ -37,9 +41,6 @@ data "aws_iam_policy_document" "assume_role" {
     }
 }
 
-data "aws_iam_policy" "read_only" {
-    name    = "ReadOnlyAccess"
-}
 data "aws_iam_policy_document" "write_to_bucket" {
     statement {
         effect      = "Allow"
@@ -75,13 +76,11 @@ data "aws_iam_policy_document" "publish_to_topic" {
 
 resource "aws_iam_role" "cloudviz" {
     name                = "${prefix}role-cloudviz"
-    assume_role_policy  = assume_role_policy.assume_role.json
-    managed_policy_arns = [ aws_iam_policy.read_only ]
+    assume_role_policy  = data.aws_iam_policy_document.assume_role.json
+    managed_policy_arns = [ data.aws_iam_policy.read_only ]
     inline_policy {
         name    = "WriteCloudVizBucket"
         policy  = data.aws_iam_policy_document.write_to_bucket.json
-    }
-    tags        = {
     }
 }
 
@@ -106,10 +105,6 @@ resource "aws_sns_topic_subscription" "email-subscription" {
     topic_arn   = aws_sns_topic.new_output.arn
     protocol    = "email"
     endpoint    = each.key
-    tags        = {
-        Name = "${prefix}sns-new-sub-${md5(each.key)}"
-        Recipient = each.key
-    }
 }
 
 resource "aws_s3_bucket_notification" "bucket_notification" {
