@@ -3,7 +3,7 @@ provider "aws" {
     default_tags {
         tags    = {
             URL: "https://github.com/lyngon/cloudviz"
-            ResourcesPrefix: "${local.prefix}-*"
+            ResourcesPrefix: "${local.prefix}"
             IaC: "Terraform"
         }
     }
