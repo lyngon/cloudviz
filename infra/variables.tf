@@ -15,10 +15,16 @@ variable "env" {
     type        = string
 }
 
+variable "project" {
+    description = "Short name (slug) for project / stack"
+    type        = string  
+    default     = "cldviz"
+}
+
 variable "prefix" {
-    description = "Prefix used for created resource names"
+    description = "Prefix used for created resource names. "
     type        = string
-    default     = "${var.org}-${var.env}-cldviz-"
+    default     = "<DEFAULT>"
 }
 
 variable "cloudviz_account" {

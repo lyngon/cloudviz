@@ -3,10 +3,14 @@ provider "aws" {
     default_tags {
         tags    = {
             URL: "https://github.com/lyngon/cloudviz"
-            ProjectResourcePrefix: "${var.prefix}"
+            ResourcesPrefix: "${local.prefix}-*"
             IaC: "Terraform"
         }
     }
+}
+
+locals {
+    prefix = var.prefix == "<DEFAULT>" ? "${var.org}-${var.env}-${var.project}" : var.prefix
 }
 
 data "aws_caller_identity" "current" {}
@@ -78,15 +82,14 @@ resource "aws_iam_role" "cloudviz" {
 }
 
 resource "aws_s3_bucket" "output" {
-    bucket      = "${var.prefix}s3-bucket"
-
+    bucket      = "${local.prefix}-s3-bucket"
     tags        = {
         Name    = "CloudViz"
     }
 }
 
 resource "aws_sns_topic" "new_output" {
-    name            = "${var.prefix}sns-new"
+    name            = "${local.prefix}-sns-new"
     display_name    = "New CloudViz output"
     policy          = data.aws_iam_policy_document.publish_to_topic.json
     tags            = {
@@ -106,10 +109,9 @@ resource "aws_sns_topic_subscription" "email-subscription" {
 }
 
 resource "aws_s3_bucket_notification" "bucket_notification" {
-  bucket = aws_s3_bucket.output.id
-
-  topic {
-    topic_arn     = aws_sns_topic.new_output.arn
-    events        = ["s3ObjectCreated*"]
-  }
+    bucket = aws_s3_bucket.output.id
+    topic {
+        topic_arn     = aws_sns_topic.new_output.arn
+        events        = ["s3ObjectCreated*"]
+    }
 }
