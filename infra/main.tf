@@ -61,7 +61,7 @@ data "aws_iam_policy_document" "publish_to_topic" {
         }
 
         actions   = ["SNS:Publish"]
-        resources = ["arnawssns:*:*:${local.new_output_topic_name}"]
+        resources = ["arn:aws:sns:${var.region}:${data.aws_caller_identity.current.account_id}:${local.new_output_topic_name}"]
 
         condition {
             test     = "ArnLike"
@@ -105,6 +105,6 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
     bucket = aws_s3_bucket.output.id
     topic {
         topic_arn     = aws_sns_topic.new_output.arn
-        events        = ["s3ObjectCreated*"]
+        events        = ["s3:ObjectCreated*"]
     }
 }
