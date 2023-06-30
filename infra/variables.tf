@@ -1,30 +1,40 @@
 variable "region" {
     description = "AWS region"
+    type        = string
     default     = "ap-southeast-1"
 }
 
 variable "org" {
     description = "Organization short string"
-    default = "lgn"
+    type        = string
+    default     = "lgn"
 }
 
 variable "env" {
     description = "Envirionment. E.g. 'dev', 'stg', 'prd'"
+    type        = string
 }
 
 variable "prefix" {
-    description = "Resource name prefix"
-    default = "${var.org}-${var.env}-cldviz-"
+    description = "Prefix used for created resource names"
+    type        = string
+    default     = "${var.org}-${var.env}-cldviz-"
 }
 
 variable "cloudviz_account" {
-    description = "The account of CloudViz service. As stated in their documentation."
-    default = "282762468439"
+    description = "The account of CloudViz service. As stated in their documentation as 'Account ID' under 'Settings' > 'Manage AWS Accounts' > 'Add AWS Accounts' > 'Step 1'"
+    
+    default     = "282762468439"
 }
 
 variable "cloudviz_external_id" {
-    description = "The External ID of CloudViz service. As stated in their documentation."
+    description = "The External ID of CloudViz service. As stated in their documentation as 'External ID' under 'Settings' > 'Manage AWS Accounts' > 'Add AWS Accounts' > 'Step 1'"
+    type        = string
 }
 
+variable "notify_emails" {
+    description = "List of email addresses to send notifications to when new outputs have been saved."
+    type        = list(string)
+}
 
 
