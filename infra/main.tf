@@ -13,6 +13,10 @@ locals {
     prefix = var.prefix == "<DEFAULT>" ? "${var.org}-${var.env}-${var.project}" : var.prefix
 }
 
+locals {
+    new_output_topic_name = "${local.prefix}-sns-new"
+}
+
 data "aws_caller_identity" "current" {}
 
 data "aws_iam_policy_document" "assume_role" {
@@ -59,7 +63,7 @@ data "aws_iam_policy_document" "publish_to_topic" {
         }
 
         actions   = ["SNS:Publish"]
-        resources = [aws_sns_topic.new_output.arn]
+        resources = ["arnawssns:*:*:${local.new_output_topic_name}"]
 
         condition {
             test     = "ArnLike"
@@ -89,7 +93,7 @@ resource "aws_s3_bucket" "output" {
 }
 
 resource "aws_sns_topic" "new_output" {
-    name            = "${local.prefix}-sns-new"
+    name            = local.new_output_topic_name
     display_name    = "New CloudViz output"
     policy          = data.aws_iam_policy_document.publish_to_topic.json
     tags            = {
