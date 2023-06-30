@@ -14,15 +14,15 @@ variable "env" {
 
 variable "prefix" {
     description = "Resource name prefix"
-    default = "${var.org}-${var.env}-cldviz"
+    default = "${var.org}-${var.env}-cldviz-"
 }
 
-variable "cloudviz-account" {
+variable "cloudviz_account" {
     description = "The account of CloudViz service. As stated in their documentation."
     default = "282762468439"
 }
 
-variable "cloudviz-external-id" {
+variable "cloudviz_external_id" {
     description = "The External ID of CloudViz service. As stated in their documentation."
 }
 
